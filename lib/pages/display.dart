@@ -52,8 +52,7 @@ class CustomWidget extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => CreateCustomer(
-                                    initialData:
-                                        customerData, // Pass customer data here
+                                    initialData: customerData,
                                   ),
                                 ),
                               );
@@ -62,7 +61,7 @@ class CustomWidget extends StatelessWidget {
                           ),
                           IconButton(
                             onPressed: () {
-                              showBottomSheet(
+                              showModalBottomSheet(
                                 context: context,
                                 builder: (BuildContext context) {
                                   return DeleteBottomSheet();
