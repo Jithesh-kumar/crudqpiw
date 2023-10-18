@@ -1,3 +1,4 @@
+//import 'package:crud_new/model/customer.dart';
 import 'package:crud_new/pages/create_cust.dart';
 import 'package:crud_new/pages/display.dart';
 import 'package:flutter/material.dart';
@@ -5,8 +6,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'dart:io' show Platform;
 
 class ViewCustomer extends StatelessWidget {
-  const ViewCustomer({super.key});
-
+  final Map<String, dynamic>? customerData;
+  const ViewCustomer({
+    Key? key,
+    this.customerData,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final isAndroid = Platform.isAndroid;
@@ -131,7 +135,9 @@ class ViewCustomer extends StatelessWidget {
               ],
             ),
           ),
-          CustomWidget(),
+          CustomWidget(
+            customerData: customerData,
+          ),
         ],
       ),
     );

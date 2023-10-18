@@ -1,10 +1,14 @@
+//import 'dart:developer';
 import 'dart:io' show Platform;
 
-import 'package:crud_new/pages/display.dart';
+import 'package:crud_new/data/crudmodel/crudmodel.dart';
+import 'package:crud_new/data/data.dart';
+import 'package:crud_new/pages/view_cust.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:intl/intl.dart';
 
 class CreateCustomer extends StatefulWidget {
   final Map<String, dynamic>? initialData;
@@ -26,20 +30,20 @@ class _CreateCustomerState extends State<CreateCustomer> {
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _debitCardController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
+  // @override
+  // void initState() {
+  //   super.initState();
 
-    if (widget.initialData != null) {
-      _firstNameController.text = widget.initialData!['First Name'] ?? '';
-      _lastNameController.text = widget.initialData!['Last Name'] ?? '';
-      _dateOfBirthController.text = widget.initialData!['Date of Birth'] ?? '';
-      _emailController.text = widget.initialData!['Email'] ?? '';
-      _phoneNumberController.text = widget.initialData!['Phone Number'] ?? '';
-      _debitCardController.text =
-          widget.initialData!['Bank Account Number'] ?? '';
-    }
-  }
+  //   if (widget.initialData != null) {
+  //     _firstNameController.text = widget.initialData!['First Name'] ?? '';
+  //     _lastNameController.text = widget.initialData!['Last Name'] ?? '';
+  //     _dateOfBirthController.text = widget.initialData!['Date of Birth'] ?? '';
+  //     _emailController.text = widget.initialData!['Email'] ?? '';
+  //     _phoneNumberController.text = widget.initialData!['Phone Number'] ?? '';
+  //     _debitCardController.text =
+  //         widget.initialData!['Bank Account Number'] ?? '';
+  //   }
+  // }
 
   void _clearFields() {
     setState(() {
@@ -62,16 +66,16 @@ class _CreateCustomerState extends State<CreateCustomer> {
       'Bank Account Number': _debitCardController.text.trim(),
     };
 
-    if (widget.initialData != null) {
-      print('Updating customer: $customer');
-    } else {
-      print('Creating customer: $customer');
-    }
+    // if (widget.initialData != null) {
+    //   print('Updating customer: $customer');
+    // } else {
+    //   print('Creating customer: $customer');
+    // }
 
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CustomWidget(customerData: customer),
+        builder: (context) => ViewCustomer(customerData: customer),
       ),
     );
   }
@@ -95,7 +99,7 @@ class _CreateCustomerState extends State<CreateCustomer> {
                   ),
                   Text(
                     'Back',
-                    style: GoogleFonts.xanhMono(fontWeight: FontWeight.bold),
+                    style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -210,10 +214,10 @@ class _CreateCustomerState extends State<CreateCustomer> {
                             padding: EdgeInsets.all(isAndroid ? 10 : 10),
                             child: TextField(
                               controller: _dateOfBirthController,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly
-                              ],
+                              // keyboardType: TextInputType.number,
+                              // inputFormatters: [
+                              //   FilteringTextInputFormatter.digitsOnly
+                              // ],
                               decoration: InputDecoration(
                                 prefixIcon: const Icon(Icons.calendar_month),
                                 labelText: '15-09-2023',
@@ -333,7 +337,9 @@ class _CreateCustomerState extends State<CreateCustomer> {
                                 width: 390,
                                 height: 40,
                                 child: ElevatedButton(
-                                  onPressed: _createOrUpdateCustomer,
+                                  onPressed: () {
+                                    saveCust();
+                                  },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor:
                                         const Color.fromARGB(255, 130, 118, 242)
@@ -347,7 +353,9 @@ class _CreateCustomerState extends State<CreateCustomer> {
                                         ? 'Update'
                                         : 'Create',
                                     style: GoogleFonts.roboto(
-                                        fontSize: 20, color: Colors.white),
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -371,5 +379,29 @@ class _CreateCustomerState extends State<CreateCustomer> {
         ),
       ),
     );
+  }
+
+  Future<void> saveCust() async {
+    final fName = _firstNameController.text;
+    final lName = _lastNameController.text;
+    final email = _emailController.text;
+    final dobString = _dateOfBirthController.text;
+    final phone = _phoneNumberController.text;
+    //log(_debitCardController.text);
+    final accNum = _debitCardController.text;
+    try {
+      final dob = DateFormat("dd-MM-yyyy").parse(dobString);
+      final _newCust = Crudmodel.create(
+          id: DateTime.now().microsecondsSinceEpoch.toString(),
+          fName: fName,
+          lName: lName,
+          email: email,
+          dob: dob,
+          phone: phone,
+          accNum: accNum);
+      CrudDB().createCust(_newCust);
+    } catch (e) {
+      print("error:$e");
+    }
   }
 }
