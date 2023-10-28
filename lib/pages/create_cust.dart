@@ -3,12 +3,12 @@ import 'dart:io' show Platform;
 
 import 'package:crud_new/data/crudmodel/crudmodel.dart';
 import 'package:crud_new/data/data.dart';
-import 'package:crud_new/pages/view_cust.dart';
+//import 'package:crud_new/pages/view_cust.dart';
+//import 'package:crud_new/pages/view_cust.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:intl/intl.dart';
 
 class CreateCustomer extends StatefulWidget {
   final Map<String, dynamic>? initialData;
@@ -29,21 +29,20 @@ class _CreateCustomerState extends State<CreateCustomer> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _debitCardController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  //   if (widget.initialData != null) {
-  //     _firstNameController.text = widget.initialData!['First Name'] ?? '';
-  //     _lastNameController.text = widget.initialData!['Last Name'] ?? '';
-  //     _dateOfBirthController.text = widget.initialData!['Date of Birth'] ?? '';
-  //     _emailController.text = widget.initialData!['Email'] ?? '';
-  //     _phoneNumberController.text = widget.initialData!['Phone Number'] ?? '';
-  //     _debitCardController.text =
-  //         widget.initialData!['Bank Account Number'] ?? '';
-  //   }
-  // }
+    if (widget.initialData != null) {
+      _firstNameController.text = widget.initialData!['First Name'] ?? '';
+      _lastNameController.text = widget.initialData!['Last Name'] ?? '';
+      _dateOfBirthController.text = widget.initialData!['Date of Birth'] ?? '';
+      _emailController.text = widget.initialData!['Email'] ?? '';
+      _phoneNumberController.text = widget.initialData!['Phone Number'] ?? '';
+      _debitCardController.text =
+          widget.initialData!['Bank Account Number'] ?? '';
+    }
+  }
 
   void _clearFields() {
     setState(() {
@@ -66,18 +65,37 @@ class _CreateCustomerState extends State<CreateCustomer> {
       'Bank Account Number': _debitCardController.text.trim(),
     };
 
-    // if (widget.initialData != null) {
-    //   print('Updating customer: $customer');
-    // } else {
-    //   print('Creating customer: $customer');
-    // }
+    if (widget.initialData != null) {
+      Navigator.of(context).pop();
+      print('Updating customer: $customer');
+    } else {
+      print('Creating customer: $customer');
+    }
+  }
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ViewCustomer(customerData: customer),
-      ),
-    );
+  Future<void> saveCust() async {
+    final fName = _firstNameController.text;
+    final lName = _lastNameController.text;
+    final email = _emailController.text;
+    final dob = _dateOfBirthController.text;
+    final phone = _phoneNumberController.text;
+    final accNum = _debitCardController.text;
+    final _newCust = Crudmodel.create(
+        id: DateTime.now().microsecondsSinceEpoch.toString(),
+        fName: fName,
+        lName: lName,
+        email: email,
+        dob: dob,
+        phone: phone,
+        accNum: accNum);
+
+    final newCust = await CrudDB().createCust(_newCust);
+    if (newCust != null) {
+      Navigator.of(context).pop();
+      print('Created customer');
+    } else {
+      print("Error while saveing customer");
+    }
   }
 
   @override
@@ -379,29 +397,5 @@ class _CreateCustomerState extends State<CreateCustomer> {
         ),
       ),
     );
-  }
-
-  Future<void> saveCust() async {
-    final fName = _firstNameController.text;
-    final lName = _lastNameController.text;
-    final email = _emailController.text;
-    final dobString = _dateOfBirthController.text;
-    final phone = _phoneNumberController.text;
-    //log(_debitCardController.text);
-    final accNum = _debitCardController.text;
-    try {
-      final dob = DateFormat("dd-MM-yyyy").parse(dobString);
-      final _newCust = Crudmodel.create(
-          id: DateTime.now().microsecondsSinceEpoch.toString(),
-          fName: fName,
-          lName: lName,
-          email: email,
-          dob: dob,
-          phone: phone,
-          accNum: accNum);
-      CrudDB().createCust(_newCust);
-    } catch (e) {
-      print("error:$e");
-    }
   }
 }

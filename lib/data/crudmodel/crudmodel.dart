@@ -4,7 +4,7 @@ part 'crudmodel.g.dart';
 
 @JsonSerializable()
 class Crudmodel {
-  @JsonKey(name: 'id')
+  @JsonKey(name: '_id')
   String? id;
   @JsonKey(name: 'F_name')
   String? fName;
@@ -13,10 +13,9 @@ class Crudmodel {
   @JsonKey(name: 'email')
   String? email;
   @JsonKey(name: 'dob')
-  DateTime? dob;
+  String? dob;
   @JsonKey(name: 'phone')
   String? phone;
-  //@JsonKey(name: '')
   @JsonKey(name: 'acc_num')
   String? accNum;
 
