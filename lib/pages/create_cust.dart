@@ -29,20 +29,20 @@ class _CreateCustomerState extends State<CreateCustomer> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _debitCardController = TextEditingController();
-  @override
-  void initState() {
-    super.initState();
+  // @override
+  // void initState() {
+  //   super.initState();
 
-    if (widget.initialData != null) {
-      _firstNameController.text = widget.initialData!['First Name'] ?? '';
-      _lastNameController.text = widget.initialData!['Last Name'] ?? '';
-      _dateOfBirthController.text = widget.initialData!['Date of Birth'] ?? '';
-      _emailController.text = widget.initialData!['Email'] ?? '';
-      _phoneNumberController.text = widget.initialData!['Phone Number'] ?? '';
-      _debitCardController.text =
-          widget.initialData!['Bank Account Number'] ?? '';
-    }
-  }
+  //   if (widget.initialData != null) {
+  //     _firstNameController.text = widget.initialData!['First Name'] ?? '';
+  //     _lastNameController.text = widget.initialData!['Last Name'] ?? '';
+  //     _dateOfBirthController.text = widget.initialData!['Date of Birth'] ?? '';
+  //     _emailController.text = widget.initialData!['Email'] ?? '';
+  //     _phoneNumberController.text = widget.initialData!['Phone Number'] ?? '';
+  //     _debitCardController.text =
+  //         widget.initialData!['Bank Account Number'] ?? '';
+  //   }
+  // }
 
   void _clearFields() {
     setState(() {
@@ -55,23 +55,23 @@ class _CreateCustomerState extends State<CreateCustomer> {
     });
   }
 
-  void _createOrUpdateCustomer() {
-    final customer = {
-      'First Name': _firstNameController.text.trim(),
-      'Last Name': _lastNameController.text.trim(),
-      'Date of Birth': _dateOfBirthController.text.trim(),
-      'Email': _emailController.text.trim(),
-      'Phone Number': _phoneNumberController.text.trim(),
-      'Bank Account Number': _debitCardController.text.trim(),
-    };
+  // void _createOrUpdateCustomer() {
+  //   final customer = {
+  //     'First Name': _firstNameController.text.trim(),
+  //     'Last Name': _lastNameController.text.trim(),
+  //     'Date of Birth': _dateOfBirthController.text.trim(),
+  //     'Email': _emailController.text.trim(),
+  //     'Phone Number': _phoneNumberController.text.trim(),
+  //     'Bank Account Number': _debitCardController.text.trim(),
+  //   };
 
-    if (widget.initialData != null) {
-      Navigator.of(context).pop();
-      print('Updating customer: $customer');
-    } else {
-      print('Creating customer: $customer');
-    }
-  }
+  //   if (widget.initialData != null) {
+  //     Navigator.of(context).pop();
+  //     print('Updating customer: $customer');
+  //   } else {
+  //     print('Creating customer: $customer');
+  //   }
+  // }
 
   Future<void> saveCust() async {
     final fName = _firstNameController.text;
@@ -96,6 +96,23 @@ class _CreateCustomerState extends State<CreateCustomer> {
     } else {
       print("Error while saveing customer");
     }
+  }
+
+  Future<void> saveEditcust() async {
+    final _fName = _firstNameController.text;
+    final _lName = _lastNameController.text;
+    final _email = _emailController.text;
+    final _dob = _dateOfBirthController.text;
+    final _phone = _phoneNumberController.text;
+    final _accNum = _debitCardController.text;
+    Crudmodel.create(
+        id: id,
+        fName: _fName,
+        lName: _lName,
+        email: _email,
+        dob: _dob,
+        phone: _phone,
+        accNum: _accNum);
   }
 
   @override
